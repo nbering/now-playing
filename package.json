@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/nbering/now-playing/issues"
   },
-  "homepage": "https://github.com/nbering/now-playing#readme"
+  "homepage": "https://github.com/nbering/now-playing#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
