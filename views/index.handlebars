@@ -1,15 +1,109 @@
-<div style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; font-weight: bold; font-size: 20px;">
-    <img src="/artwork" style="max-width: 75px; max-height: 75px; float: right;">
-    <div style="text-align: right; width: 100%;">
-        Artist: {{ vlcStatus.information.meta.artist }}
-    </div>
-    <div style="text-align: right; width: 100%;">
-        Title: {{ vlcStatus.information.meta.title}}
-    <div>
-</div>
-<script type="text/javascript">
-// Refresh the page every 10 seconds
-setTimeout(function () {
-    window.location.reload();
-}, 10000)
-</script>
+<h1>"Now Playing" Setup</h1>
+The instructions provided here are for a macOS computer, but should be very
+similar for any computer than can run VLC, OBS, and NodeJS.
+
+It is assumed that you already have VLC, OBS, and NodeJS installed.
+
+<h2>Configure VLC</h2>
+
+<p>
+With VLC open, select from the top menu, <i>VLC</i> &gt; <i>Preferences</i>.
+</p>
+
+<img src="/images/setup-vlc-01.png">
+
+<p>
+In the first, section of the preferences window - "Interface" - scroll to the
+very bottom of the list to the subsection called "HTTP Web Interface". Check the
+box for "Enable HTTP web interface", and enter a password to secure it.
+</p>
+
+<img src="/images/setup-vlc-02.png">
+
+<p>
+Test that the service is running and that your password is working as expected.
+Open a web browser and navigate to "http://localhost:8080/".
+</p>
+
+<p>
+You should be prompted by your browser for a username and password. Leave the
+username field empty, and enter the password you set in the VLC preferences
+window.
+</p>
+
+<p>
+If your browser is unable to connect to the web interface, try restart VLC and
+try again.
+</p>
+
+<img src="/images/setup-vlc-03.png">
+
+<p>
+If everything works as expected, you should get a web interface to VLC, like
+this...
+</p>
+
+<img src="/images/setup-vlc-04.png">
+
+<p>
+If you get something else, you may already have something running on port 8080.
+You can either shut down whatever is using that TCP port on your system, or use
+command-line flags to start VLC with a different HTTP port. See the
+<a href="https://wiki.videolan.org/documentation:modules/http_intf/">
+    VLC documentation for the HTTP module
+</a>
+for more on how to do that.
+</p>
+
+<h2>Configure "Now Playing" Server</h2>
+
+<p>
+For "Now Playing" to use the HTTP web interface provided by VLC, it will need
+the password you configured for VLC. This is done with an environment variable.
+</p>
+
+<p>
+To set an environment variable for "Now Playing" from the command-line, you can
+use the syntax "KEY=VALUE command [arguments]". Like this...
+</p>
+
+<pre><code>VLC_PASS='mysupersecretpassword' npm start</code></pre>
+
+<h2>Configure OBS</h2>
+
+<p>
+With OBS open to the scene you'd like to add your "Now Playing" overlay to,
+select "Add Source", and pick "Browser".
+</p>
+
+<img src="/images/setup-obs-01.png">
+
+<p>
+Give your new browser source a useful name.
+</p>
+
+<img src="/images/setup-obs-02.png">
+
+<p>
+In the Browser source options, enter the URL for your "Now Playing" service's
+now-playing page. By default this will be
+<a href="https://localhost:3000/now-playing">
+    https://localhost:3000/now-playing
+</a>.
+</p>
+
+<p>
+The rest of the default options should work fine here. You may want to set a
+width and height for your browser source. 400x100 seems to work fine.
+</p>
+
+<img src="/images/setup-obs-03.png">
+
+<p>
+Position your browser source element where you want it in the scene. If you have
+a song playing, you should see the Artist name and track Title in the overlay.
+
+If VLC has album artwork cached, it should display that as well.
+</p>
+
+<img src="/images/setup-obs-04.png"

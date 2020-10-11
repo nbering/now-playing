@@ -11,10 +11,16 @@ const vlcClient = new VLC(null, process.env["VLC_PASS"]);
 app.engine("handlebars", expressHandlebars());
 app.set("view engine", "handlebars");
 
+app.use(express.static("public"));
+
 app.get("/", (req, res) => {
+    res.render("index");
+});
+
+app.get("/now-playing", (req, res) => {
     vlcClient.getStatus()
         .then(status => {
-            res.render("index", {
+            res.render("now-playing", {
                 vlcStatus: status
             });
         });
