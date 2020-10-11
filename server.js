@@ -1,5 +1,6 @@
 const express = require("express");
 const expressHandlebars = require("express-handlebars");
+const url = require ("url");
 
 const app = express();
 const port = process.env["PORT"] || 3000;
@@ -16,6 +17,20 @@ app.get("/", (req, res) => {
             res.render("index", {
                 vlcStatus: status
             });
+        });
+});
+
+app.get("/artwork", (req, res) => {
+    vlcClient.getStatus()
+        .then(status => {
+            if (status.information.meta.artwork_url){
+                filePath = url.fileURLToPath(status.information.meta.artwork_url)
+                // TODO: Potentially unsafe...
+                // Ideally this should limit to a base path
+                return res.sendFile(filePath);
+            }
+            else
+                return res.status(404);
         });
 });
 

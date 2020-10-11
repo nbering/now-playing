@@ -1,9 +1,15 @@
-<h1>Now Playing</h1>
-<ul>
-    <li>
+<div style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; font-weight: bold; font-size: 20px;">
+    <img src="/artwork" style="max-width: 75px; max-height: 75px; float: right;">
+    <div style="text-align: right; width: 100%;">
         Artist: {{ vlcStatus.information.meta.artist }}
-    </li>
-    <li>
+    </div>
+    <div style="text-align: right; width: 100%;">
         Title: {{ vlcStatus.information.meta.title}}
-    </li>
-</ul>
+    <div>
+</div>
+<script type="text/javascript">
+// Refresh the page every 10 seconds
+setTimeout(function () {
+    window.location.reload();
+}, 10000)
+</script>
