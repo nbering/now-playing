@@ -40,6 +40,15 @@ app.get("/artwork", (req, res) => {
         });
 });
 
+vlcClient.on("song-changed", (status) => {
+    if (!status || !status.information.meta.filename)
+        console.log("The beats have stopped.");
+    else
+        console.log(`Now Playing: "${status.information.meta.title}"`)
+});
+
+vlcClient.start();
+
 app.listen(port, () =>{
     console.log(`Now Playing server listening at http://localhost:${port}`)
 });
