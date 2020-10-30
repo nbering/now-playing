@@ -5,6 +5,9 @@ const url = require ("url");
 const app = express();
 const port = process.env["PORT"] || 3000;
 
+const websocketBus = require("express-ws-event-bus");
+const websocketRouter = websocketBus(app, "/lib/websocket-bus")
+
 const VLC = require("./lib/vlc");
 const vlcClient = new VLC(null, process.env["VLC_PASS"]);
 
@@ -40,11 +43,16 @@ app.get("/artwork", (req, res) => {
         });
 });
 
+
+websocketRouter("/ws").then(socket => {
 vlcClient.on("song-changed", (status) => {
+        socket.send("song-changed", status);
+
     if (!status || !status.information.meta.filename)
         console.log("The beats have stopped.");
     else
         console.log(`Now Playing: "${status.information.meta.title}"`)
+});
 });
 
 vlcClient.start();
