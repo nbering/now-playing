@@ -1,18 +1,31 @@
 <div style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">
-    <img src="/artwork" style="max-width: 75px; max-height: 75px; float: right;">
-    <div style="text-align: center; width: 100%; font-size: 2rem; font-weight: bold;">
+    <img id="artwork" src="/artwork" style="max-width: 75px; max-height: 75px; float: right;">
+    <div id="song-title" style="text-align: center; width: 100%; font-size: 2rem; font-weight: bold;">
         {{ vlcStatus.information.meta.title}}
-    <div>
-    <div style="text-align: center; width: 100%; font-size: 1rem; font-weight: lighter;">
+    </div>
+    <div id="album" style="text-align: center; width: 100%; font-size: 1rem; font-weight: lighter;">
         {{ vlcStatus.information.meta.album}}
     </div>
-    <div style="text-align: center; width: 100%; font-size: 1.5rem;">
+    <div id="artist" style="text-align: center; width: 100%; font-size: 1.5rem;">
         {{ vlcStatus.information.meta.artist }}
     </div>
 </div>
+<script src="lib/websocket-bus/websocket-client.js" type="text/javascript"></script>
 <script type="text/javascript">
-// Refresh the page every 10 seconds
-setTimeout(function () {
-    window.location.reload();
-}, 10000)
+    function replaceContents(id, text){
+        textNode = document.createTextNode(text);
+
+        outer = document.getElementById(id);
+        outer.innerHTML = "";
+        outer.appendChild(textNode);
+    }
+
+    getWebsocket("/ws").then(socket => {
+        socket.on("song-changed", status => {
+            replaceContents("song-title", status.information.meta.title);
+            replaceContents("album", status.information.meta.album);
+            replaceContents("artist", status.information.meta.artist);
+            document.getElementById("artwork").src = "/artwork?" + new Date().getTime();
+        });
+    });
 </script>
