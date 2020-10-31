@@ -46,7 +46,7 @@ app.get("/artwork", (req, res, next) => {
 
 websocketRouter("/ws").then(socket => {
     vlcClient.on("song-changed", (status) => {
-        socket.send("song-changed", status);
+        socket.send("song-changed", status.information.meta);
 
         if (!status || !status.information.meta.filename)
             console.log("The beats have stopped.");

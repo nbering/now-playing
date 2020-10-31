@@ -21,10 +21,10 @@
     }
 
     getWebsocket("/ws").then(socket => {
-        socket.on("song-changed", status => {
-            replaceContents("song-title", status.information.meta.title);
-            replaceContents("album", status.information.meta.album);
-            replaceContents("artist", status.information.meta.artist);
+        socket.on("song-changed", meta => {
+            replaceContents("song-title", meta.title || "");
+            replaceContents("album", meta.album || "");
+            replaceContents("artist", meta.artist || "");
             document.getElementById("artwork").src = "/artwork?" + new Date().getTime();
         });
     });
