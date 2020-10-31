@@ -29,7 +29,7 @@ app.get("/now-playing", (req, res) => {
         });
 });
 
-app.get("/artwork", (req, res) => {
+app.get("/artwork", (req, res, next) => {
     vlcClient.getStatus()
         .then(status => {
             if (status.information.meta.artwork_url){
@@ -39,20 +39,20 @@ app.get("/artwork", (req, res) => {
                 return res.sendFile(filePath);
             }
             else
-                return res.status(404);
+                return res.redirect("/images/music.svg");
         });
 });
 
 
 websocketRouter("/ws").then(socket => {
-vlcClient.on("song-changed", (status) => {
+    vlcClient.on("song-changed", (status) => {
         socket.send("song-changed", status);
 
-    if (!status || !status.information.meta.filename)
-        console.log("The beats have stopped.");
-    else
-        console.log(`Now Playing: "${status.information.meta.title}"`)
-});
+        if (!status || !status.information.meta.filename)
+            console.log("The beats have stopped.");
+        else
+            console.log(`Now Playing: "${status.information.meta.title}"`)
+    });
 });
 
 vlcClient.start();
